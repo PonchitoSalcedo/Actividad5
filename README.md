@@ -211,7 +211,8 @@ El ingreso medio es, por mucho, el predictor más relevante, seguido por el tama
 ```bash
 mlflow ui --backend-store-uri sqlite:///mlflow.db
 
-**10. Conclusiones del Proyecto**
+
+**10. Conclusiones**
 **10.1 Resumen Ejecutivo del Hallazgo Principal**
 Este proyecto ha demostrado que es posible predecir el precio medio de viviendas en California con una precisión del 83.21% (R²) utilizando únicamente variables socioeconómicas y de infraestructura del censo. El modelo XGBoost, implementado con regularización y optimización en GPU, ha superado consistentemente a algoritmos baseline como Regresión Lineal y Random Forest, alcanzando un MAE de 0.3466 (equivalente a $34,660 en precio de vivienda). Esta precisión posiciona al sistema como una herramienta viable para estimaciones preliminares en el sector inmobiliario.
 
