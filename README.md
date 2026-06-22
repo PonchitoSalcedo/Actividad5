@@ -216,18 +216,55 @@ mlflow ui --backend-store-uri sqlite:///mlflow.db
 
 ### 10.1 Resumen Ejecutivo del Hallazgo Principal
 
-Este proyecto ha demostrado que es posible predecir el precio medio de viviendas en California con una precisión del **83.21%** (R²).
+Este proyecto ha demostrado que es posible predecir el precio medio de viviendas en California con una precisión del **83.21%** (R²) utilizando únicamente variables socioeconómicas y de infraestructura del censo. El modelo **XGBoost** alcanzó un **MAE de 0.3466** (equivalente a $34,660 en precio de vivienda), posicionándose como una herramienta viable para estimaciones preliminares en el sector inmobiliario.
 
 ### 10.2 Calidad y Estructura de los Datos
 
-El conjunto de datos analizado presentó características que facilitaron el proceso de modelado. La ausencia total de valores nulos...
+El conjunto de datos analizado presentó características que facilitaron el proceso de modelado. La **ausencia total de valores nulos** en las 20,640 observaciones eliminó la necesidad de imputaciones, evitando la introducción de sesgos. La variable objetivo mostró una distribución sesgada a la derecha, reflejando la realidad del mercado inmobiliario donde las viviendas de alto precio son menos frecuentes. Este sesgo no afectó negativamente el rendimiento de los modelos basados en árboles, pero sí limitó la capacidad de la Regresión Lineal para ajustarse a los precios extremos.
 
 ### 10.3 Impacto de la Ingeniería de Características
 
-El proceso de limpieza y preparación de datos fue crítico. La detección y tratamiento de outliers mediante el método IQR, específicamente...
+El proceso de limpieza y preparación de datos fue crítico. La **detección y tratamiento de outliers mediante el método IQR** (Rango Intercuartil), especialmente en variables como `Population` (11.91% de outliers) y `AveOccup` (14.02%), evitó que observaciones extremas distorsionaran las estimaciones. El escalado de las variables fue esencial para la Regresión Lineal, mientras que los modelos basados en árboles se beneficiaron de la consistencia en los rangos de las características.
 
 ### 10.4 Rendimiento Comparativo de los Modelos
 
 La comparación sistemática arrojó resultados concluyentes:
 
-- **XGBoost** emerge como el modelo óptimo, superando a Random Forest en un 4% en R² y a Regresión Lineal en un 44.6%.
+- **XGBoost** emerge como el modelo óptimo, superando a Random Forest en un **4% en R²** y a Regresión Lineal en un **44.6%**.
+- La latencia de inferencia de todos los modelos es excepcionalmente baja (milisegundos), demostrando viabilidad para aplicaciones en tiempo real.
+- La consistencia entre los resultados de validación cruzada y el conjunto de prueba confirma la **ausencia de sobreajuste significativo**.
+
+### 10.5 Análisis de los Errores (Residuos)
+
+El análisis de residuos mostró que los modelos tienden a **subestimar los precios de las viviendas más caras** (precios > $400,000). Este sesgo indica una limitación en la capacidad de los modelos para capturar la varianza en el extremo superior de la distribución, posiblemente debido a la naturaleza sesgada del target o a la falta de características adicionales (como calidad de la construcción o servicios cercanos) que influyen en los precios más altos.
+
+### 10.6 Interpretabilidad del Modelo
+
+El análisis de importancia de características del modelo Random Forest identificó a **MedInc** (ingreso medio) como el predictor más relevante con un **52.4% de contribución**. Este hallazgo es económicamente coherente: el poder adquisitivo del vecindario es el principal determinante del precio de la vivienda. Le siguen en importancia `AveRooms` (14.2%) y `HouseAge` (10.2%). Esta jerarquía proporciona información valiosa para el sector inmobiliario y valida la plausibilidad de las predicciones.
+
+### 10.7 Limitaciones Metodológicas y Sesgos Identificados
+
+- **Desactualización de los datos:** Los datos de 1990 pueden no reflejar la realidad del mercado inmobiliario actual.
+- **Falta de variables clave:** No se incluyen factores como calidad de la construcción, servicios cercanos, colegios, etc.
+- **Sesgo geográfico:** Los datos solo cubren California, limitando la generalización a otros estados.
+- **Validación externa limitada:** Todos los experimentos se realizaron sobre particiones del mismo dataset original.
+
+### 10.8 Contribuciones Originales y Valor Añadido del Proyecto
+
+1. **Pipeline completo de MLOps:** Se ha desarrollado un flujo de trabajo que integra limpieza, modelado, evaluación, optimización y seguimiento de experimentos.
+2. **Optimización sistemática:** Se aplicó Grid Search y validación cruzada, demostrando la mejora en el rendimiento de los modelos.
+3. **Análisis de interpretabilidad:** Se proporcionó un análisis claro de qué características influyen en el precio, útil para stakeholders no técnicos.
+4. **Trazabilidad con MLflow:** Todos los experimentos y artefactos están registrados, garantizando reproducibilidad.
+
+### 10.9 Líneas de Investigación Futura
+
+- **Actualización de datos:** Recolectar datos más recientes (post-2010) para mejorar la generalización.
+- **Ingeniería de características avanzada:** Crear variables como "precio por habitación" o "proximidad a servicios".
+- **Optimización avanzada:** Implementar Optuna o Hyperopt para una búsqueda de hiperparámetros más eficiente.
+- **Modelos adicionales:** Probar otros algoritmos como LightGBM, CatBoost, o redes neuronales.
+- **Despliegue:** Crear una API con FastAPI y contenerizar con Docker para su uso en producción.
+- **Monitoreo de drift:** Implementar un sistema de monitoreo continuo con EvidentlyAI para detectar cambios en la distribución de los datos.
+
+### 10.10 Conclusión Final
+
+Este proyecto ha logrado construir un sistema predictivo para el precio de viviendas con un rendimiento sólido (R² superior al 83%), utilizando un enfoque metodológico riguroso. **XGBoost se consolida como el modelo óptimo**, equilibrando precisión, eficiencia y manejo de la complejidad de los datos. La integración de prácticas de MLOps, especialmente el seguimiento con MLflow, garantiza la trazabilidad y reproducibilidad del proceso. El trabajo constituye una base sólida para futuras extensiones, incluyendo la actualización de datos, la optimización avanzada y el despliegue en entornos productivos.
