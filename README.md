@@ -207,9 +207,6 @@ El ingreso medio es, por mucho, el predictor más relevante, seguido por el tama
 - Metadatos del experimento (fecha, tamaño del dataset, etc.)
 - Datos limpios (CSV)
 
-**Panel de MLflow:** Para visualizar y comparar todos los experimentos, ejecuta el siguiente comando después de entrenar los modelos:
-http://127.0.0.1:5000
-
 ## 10. Conclusiones del Proyecto
 
 ### 10.1 Resumen Ejecutivo del Hallazgo Principal
